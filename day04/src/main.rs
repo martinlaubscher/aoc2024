@@ -14,6 +14,8 @@ const ALL_DIRECTIONS: &[Direction] = &[
     Direction(1, 1),   // DOWN_RIGHT
 ];
 
+const PATTERN: &[char] = &['M', 'A', 'S'];
+
 fn main() {
     let file_path = "day04/input.txt";
     let contents = fs::read_to_string(file_path).expect("Should have been able to read the file");
@@ -29,25 +31,22 @@ fn main() {
                 let allowed = allowed_directions(row, col, rows, cols);
 
                 for direction in allowed {
-                    let mut stack: Vec<char> = vec!['S', 'A', 'M'];
                     let mut new_row = row as i64 + direction.0 as i64;
                     let mut new_col = col as i64 + direction.1 as i64;
-                    let mut valid = true;
-                    
-                    while !stack.is_empty()
-                        && valid
-                    {
-                        valid = lines[new_row as usize][new_col as usize] == stack.pop().unwrap();
-                        if allowed_directions(new_row as usize, new_col as usize, rows, cols)
-                            .contains(&direction) {
+                    let mut i = 0;
+
+                    while i < 3 && lines[new_row as usize][new_col as usize] == PATTERN[i] {
+                        if PATTERN[i] == 'S' {
+                            result += 1;
+                        } else if allowed_directions(new_row as usize, new_col as usize, rows, cols)
+                            .contains(&direction)
+                        {
                             new_row += direction.0 as i64;
                             new_col += direction.1 as i64;
                         } else {
                             break;
                         }
-                    }
-                    if stack.is_empty() && valid {
-                        result += 1;
+                        i += 1;
                     }
                 }
             }
