@@ -7,16 +7,22 @@ fn main() {
     let mul_re = Regex::new(r"mul\(\d{1,3},\d{1,3}\)").unwrap();
     let multiplications: Vec<&str> = mul_re.find_iter(&contents).map(|m| m.as_str()).collect();
     println!("Part 1: {}", sumproduct(&multiplications));
-    
+
     // match the don't - do blocks
     let dont_re = Regex::new(r"don't\(\).*?do\(\)").unwrap();
     // match everything after the final don't if there is no more do
     let dont_end_re = Regex::new(r"don't\(\).*").unwrap();
     // replace newline chars so matching works, then remove all the unwanted parts using regex
-    let contents_tmp: String = dont_re.replace_all(&contents.replace("\n", ""), "").parse().unwrap();
+    let contents_tmp: String = dont_re
+        .replace_all(&contents.replace("\n", ""), "")
+        .parse()
+        .unwrap();
     let contents_cleaned = dont_end_re.replace_all(&contents_tmp, "");
     // extract multiplications from cleaned contents and multiply/sum as asked
-    let multiplications_cleaned: Vec<&str> = mul_re.find_iter(&contents_cleaned).map(|m| m.as_str()).collect();
+    let multiplications_cleaned: Vec<&str> = mul_re
+        .find_iter(&contents_cleaned)
+        .map(|m| m.as_str())
+        .collect();
     println!("Part 2: {}", sumproduct(&multiplications_cleaned));
 }
 
